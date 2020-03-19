@@ -38,5 +38,24 @@ void Object::define(const std::string& src, const ResolverPtr& resolver) {
       &self);
 }
 
+Object Object::deepcopy() const {
+  std::unordered_map<c10::IValue, c10::IValue> memo;
+  return deepcopy(memo);
+}
+
+Object Object::deepcopy(
+    std::unordered_map<c10::IValue, c10::IValue>& memo) const {
+  Object obj(_ivalue()->compilation_unit(), type());
+
+  // Deepcopy slots. If a slot is a module - recursively copy it.
+  size_t N = type()->numAttributes();
+  for (size_t i = 0; i < N; ++i) {
+    IValue s = _ivalue()->getSlot(i);
+    obj._ivalue()->setAttr(type()->getAttributeName(i), s.deepcopy(memo));
+  }
+
+  return obj;
+}
+
 } // namespace jit
 } // namespace torch

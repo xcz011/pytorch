@@ -407,9 +407,12 @@ struct C10_EXPORT ivalue::Object final : c10::intrusive_ptr_target {
   }
   std::shared_ptr<ClassType> type() const;
 
-  std::shared_ptr<torch::jit::CompilationUnit> compilation_unit() {
+  std::shared_ptr<torch::jit::CompilationUnit> compilation_unit() const {
     return type_.cu_;
   }
+
+  c10::intrusive_ptr<Object> deepcopy() const;
+  c10::intrusive_ptr<Object> deepcopy(std::unordered_map<IValue, IValue>& memo) const;
 
  private:
   void resizeObject(size_t slot);

@@ -60,6 +60,7 @@ namespace jit {
   _(ModuleCloneInstance)               \
   _(ModuleConstant)                    \
   _(ModuleParameter)                   \
+  _(ModuleDeepcopy)                    \
   _(ModuleDefine)                      \
   _(QualifiedName)                     \
   _(ClassImport)                       \

@@ -1747,6 +1747,9 @@ if _enabled:
         def copy_instance(self):
             return torch.jit._recursive.wrap_cpp_module(self._c._clone_instance())
 
+        def __deepcopy__(self):
+            return torch.jit._recursive.wrap_cpp_module(self._c._deepcopy())
+
         def __getstate__(self):
             raise pickle.PickleError(
                 "ScriptModules cannot be deepcopied using copy.deepcopy or saved using torch.save. " +

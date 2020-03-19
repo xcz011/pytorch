@@ -525,6 +525,10 @@ struct CAFFE2_API IValue final {
       std::ostream& out,
       const IValue& v);
 
+  bool operator==(const IValue& other) const {
+    return isSameIdentity(other);
+  }
+
   bool isPtrType() const {
     return is_intrusive_ptr;
   }
@@ -569,6 +573,10 @@ struct CAFFE2_API IValue final {
 
   // Inserts all subvalues of this in subValues.
   void getSubValues(HashAliasedIValues& subValues) const;
+
+  IValue deepcopy() const;
+  IValue deepcopy(
+      std::unordered_map<IValue, IValue>& memo) const;
 
  private:
   // NOTE: IValue tags are intentionally private. In the future we may encode
@@ -742,6 +750,18 @@ inline bool isCustomClassRegistered() {
 
 TORCH_API std::unordered_map<std::string, std::function<PyObject*(void*)>>&
 getClassConverter();
+}
+
+namespace std {
+
+template <>
+struct hash<c10::IValue> {
+  inline size_t operator()(const c10::IValue& arg) const {
+    // TODO: define hash, this is just for compilation
+    return 0;
+  }
+};
+
 }
 
 #include <ATen/core/ivalue_inl.h>
